@@ -95,7 +95,7 @@ public class LZW extends javax.swing.JFrame {
         sc.close();
     }
 
-    Formatter out; //34an yktb el tag be format el string
+    Formatter out; 
 
     public void openfile(String path) {
         try {
@@ -116,7 +116,7 @@ public class LZW extends javax.swing.JFrame {
         s += pointer;
         out.format("%s", s);
         out.format("%n");
-        out.flush(); // 34an yktb 3al file
+        out.flush(); 
 
     }
     
@@ -124,7 +124,7 @@ public class LZW extends javax.swing.JFrame {
       
     public void initialize_array ()
     { 
-        for( int asci=0 ; asci <= 127 ; asci++) //initialize array bel asci code and its chars
+        for( int asci=0 ; asci <= 127 ; asci++) 
         {
             String character = "";
             character += (char) asci;
@@ -136,31 +136,31 @@ public class LZW extends javax.swing.JFrame {
         
         initialize_array();
         
-        int indx = 0; // bam4y beh 3al el inputstream .. data
+        int indx = 0; 
 
-        String cur = "";  // b5zn feeh el klma eli bdwr 3leha fel dic
-        int dic_indx;   // indx el klma fel dic
+        String cur = "";  
+        int dic_indx;   
         
         openfile("Compressed Data.txt");
 
-        cur += data.charAt(indx++);  // b7ot awel 7rf fel cur
+        cur += data.charAt(indx++);  
 
-        while ( indx <= data.length()) // 34an na bzwd el indx b3d ma b7ot el 7arf
+        while ( indx <= data.length()) 
         {
             dic_indx = dictionary.indexOf(cur);
             
-            while ((dic_indx != -1) && (indx < data.length())) // el klma mwgoda fel dic + lsa mawslt4 le a5r 7arf (34an ma5rog4 bara el boundries we adeef garbage)
+            while ((dic_indx != -1) && (indx < data.length())) 
             {    
-                cur += data.charAt(indx++);  // zawd 7rf fl klma
-                dic_indx = dictionary.indexOf(cur); // then search again
+                cur += data.charAt(indx++); 
+                dic_indx = dictionary.indexOf(cur); 
 
             }
              
-            if (cur.length() > 1 && dic_indx == -1) // m3naha eno mal2a4 el klma fel dic ... 34an make sure eno lsa m4 a5r 7arf
+            if (cur.length() > 1 && dic_indx == -1)
             {
-                write_tag(dictionary.indexOf(cur.substring(0, cur.length() - 1))); // btkon el klma kolha mwgoda ma3da a5r 7arf gded ... bnktb el indx bt3ha
-                dictionary.add(cur); // bdef el string kolha el gdeda fel dic
-                char c = cur.charAt(cur.length() - 1); // el cur bykon feh a5r 7arf 34an ybd2 ya5od klma gdeda 3leh
+                write_tag(dictionary.indexOf(cur.substring(0, cur.length() - 1))); 
+                dictionary.add(cur); 
+                char c = cur.charAt(cur.length() - 1); 
                 cur = "";
                 cur += c;
 
@@ -168,7 +168,7 @@ public class LZW extends javax.swing.JFrame {
               
             else 
             {
-                write_tag(dictionary.indexOf(cur)); // kda l cur hykon 7rf wa7d we hykon a5r 7rf fa hayktbo we y3ml break 34an myrg34 ydwr 3leeh tany we nd5ol fe infinite loop
+                write_tag(dictionary.indexOf(cur)); 
                 break;
 
             }
@@ -179,14 +179,14 @@ public class LZW extends javax.swing.JFrame {
     
     }
 
-    public void read_file(String FileName) { // read data file
+    public void read_file(String FileName) { 
 
         open_file(FileName);
         String data = "";
 
-        while (sc.hasNext()) // while it's not the end of file 
+        while (sc.hasNext()) 
         {
-            String cur = sc.next(); // read line then append " ignore white spaces "
+            String cur = sc.next(); 
             data += cur;
         }
 
@@ -200,29 +200,29 @@ public class LZW extends javax.swing.JFrame {
     public void decompress() 
     {
          
-        initialize_array();  // b7ot el 7rof kolha fel array (asci)
+        initialize_array();  
         int prev_dic_pointer ;
         int cur_dic_pointer = pointers.get(0) ; 
         
-        res += dictionary.get(cur_dic_pointer); // awel 7arf ha7oto fel res 34an aked haykon mwgod
+        res += dictionary.get(cur_dic_pointer); 
         
         
-        for (int i=1 ; i<pointers.size() ; i++) // haym4y 3al pointers eli 2araha kolha we haybd2 mn tany wa7d
+        for (int i=1 ; i<pointers.size() ; i++) 
         {
-            cur_dic_pointer = pointers.get(i) ; // el position aw el asci eli wa2f 3leeh nw according lel dic
-            prev_dic_pointer = pointers.get(i-1) ; // el position aw el asci eli 2ably
+            cur_dic_pointer = pointers.get(i) ; 
+            prev_dic_pointer = pointers.get(i-1) ; 
             
-            if ((cur_dic_pointer >= 0) && (cur_dic_pointer < dictionary.size())) // m3anaha eno el indx da mawgod fel dic
+            if ((cur_dic_pointer >= 0) && (cur_dic_pointer < dictionary.size())) 
             {
-                res += dictionary.get(cur_dic_pointer); // bktb el klma ely leha el asci fe res 34an yro7 yktbha 3al file
-                dictionary.add( dictionary.get(prev_dic_pointer)+dictionary.get(cur_dic_pointer).charAt(0)); // b3ml add lel klma eli 2able + first char mn eli na feha
+                res += dictionary.get(cur_dic_pointer); 
+                dictionary.add( dictionary.get(prev_dic_pointer)+dictionary.get(cur_dic_pointer).charAt(0)); 
             }
             
-            else // m3naha eno el indx OR asci da m4 mwgod fel dic nw ...  handling " ???? " case
+            else 
             {   
-                String unknown_word =  dictionary.get(prev_dic_pointer) + dictionary.get(prev_dic_pointer).charAt(0); // daymn el ??? btb2a el klma eli 2abli + awel 7arf mnha
+                String unknown_word =  dictionary.get(prev_dic_pointer) + dictionary.get(prev_dic_pointer).charAt(0); 
                 res += unknown_word ;
-                dictionary.add (unknown_word); // b3ml add b2a lel klma d
+                dictionary.add (unknown_word); 
             }
             
         }
@@ -231,7 +231,7 @@ public class LZW extends javax.swing.JFrame {
 
     public void write_res() {
 
-        openfile("Original Data.txt"); // 34an aktb el data b3d ma fakenaha
+        openfile("Original Data.txt"); 
         out.format("%s", res);
         out.flush();
         closefile();
@@ -240,11 +240,11 @@ public class LZW extends javax.swing.JFrame {
     
     ArrayList<Integer> pointers = new ArrayList<Integer>();
   
-    public void read_compressed_data(String path) // 34an 2a2ra el tags from file
+    public void read_compressed_data(String path) 
     {
         open_file(path);
       
-        while (sc.hasNext()) // while it's not the end of file 
+        while (sc.hasNext()) 
         {
            pointers.add(Integer.parseInt(sc.next()));
         }
